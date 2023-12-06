@@ -47,7 +47,7 @@ fun parseNumber(line: String): Int {
     return Integer.parseInt(first.toString() + last.toString())
 }
 
-val inputFile = args.getOrNull(0) ?: "input.txt"
+val inputFile = args.getOrNull(0) ?: "test.txt"
 val lines = File(inputFile).readLines().filter { it.isNotBlank() }
 
 val numbers = lines.map(::parseNumber)
