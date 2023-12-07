@@ -109,10 +109,14 @@ val headerToCategoryMapping = mapOf(
     "humidity-to-location map:" to CategoryMapping(from = Category.HUMIDITY, to = Category.LOCATION),
 )
 
-data class ParsedFile(val seedValues: List<Long>, val itemConverters: List<ItemConverter>)
+data class ParsedFile(val seedValues: Sequence<Long>, val itemConverters: List<ItemConverter>)
 
 fun parseFile(lines: List<String>): ParsedFile {
     val seedValues = lines[0].substringAfter(": ").split(" ").map { it.toLong() }
+        .windowed(size = 2, step = 2)
+        .asSequence()
+        .map { (rangeStart, rangeLen) -> buildRange(rangeStart, rangeLen).asSequence() }
+        .flatten()
 
     val conversionSectionLines = lines.drop(1).filter { it.isNotBlank() }
     val converters = parseConversionSections(conversionSectionLines)
